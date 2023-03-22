@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const logger = require("morgan");
 const cors = require("cors");
 const passport = require("passport");
+const multer = require("multer");
 /*
  * Importar datos
  */
@@ -21,8 +22,8 @@ app.use(
 );
 
 app.use(cors());
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
 require("./config/passport")(passport);
 
@@ -30,15 +31,18 @@ app.disable("x-powered-by");
 
 app.set("port", port);
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 /*
  * Llamado a las rutas
  */
 
-usersRoutes(app);
+usersRoutes(app, upload);
 
 /*
-* Configuracion del Servidor
-*/
+ * Configuracion del Servidor
+ */
 
 server.listen(3000, "192.168.1.88" || "localhost", function () {
   console.log("Aplicacion de Node js " + port + " Iniciada...");
@@ -51,7 +55,6 @@ app.get("/", (req, res) => {
 app.get("/test", (req, res) => {
   res.send("Ruta test");
 });
-
 
 // Error handler
 
