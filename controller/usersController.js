@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Rol = require("../models/rol");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
@@ -31,6 +32,7 @@ module.exports = {
       const isPasswordValid = await bcrypt.compare(password, myUser.password);
 
       if (isPasswordValid) {
+        
         const token = jwt.sign(
           { id: myUser.id, email: myUser.email },
           keys.secretOrKey,
@@ -45,6 +47,7 @@ module.exports = {
           phone: myUser.phone,
           image: myUser.image,
           session_token: `JWT ${token}`,
+          roles: JSON.parse(myUser.roles)
         };
 
         return res.status(201).json({
@@ -80,6 +83,7 @@ module.exports = {
       });
     });
   },
+
   async registerWithImage(req, res) {
     const user = JSON.parse(req.body.user);
 
@@ -109,13 +113,23 @@ module.exports = {
         keys.secretOrKey,
         {}
       );
-      user.session_token = token;
+      user.session_token = `JWT ${token}`;
 
-      return res.status(201).json({
-        success: true,
-        message: "El registro se realizo correctamente",
-        data: user, //El ID del nuevo usuario
-      });
+      Rol.create(user.id, 3, (err, data => {
+        if (err) {
+          return res.status(501).json({
+            success: false,
+            message: "Hubo un error con el registro del rol del usuario",
+            error: err,
+          });
+        }
+        return res.status(201).json({
+          success: true,
+          message: "El registro se realizo correctamente",
+          data: user, //El ID del nuevo usuario
+        });
+
+      }));
     });
   },
 };
