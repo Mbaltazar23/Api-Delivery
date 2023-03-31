@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = {};
 
 User.findById = (id, result) => {
-  const sql  = `
+  const sql = `
   SELECT
       U.id,
       U.email,
@@ -126,6 +126,58 @@ User.create = async (user, result) => {
       } else {
         console.log("Id del nuevo user : ", res);
         result(null, res.insertId);
+      }
+    }
+  );
+};
+
+User.update = (user, result) => {
+  const sql = `
+  UPDATE 
+  users 
+  SET name = ?, lastname =?, phone = ?, image = ?, updated_at = ? WHERE id = ?`;
+  db.query(
+    sql,
+    [
+      user.name,
+      user.lastname,
+      user.phone,
+      user.image,
+      new Date(),
+      user.id,
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("Error : ", err);
+      } else {
+        console.log("Usuario actualizado : ", res.insertId);
+        result(null, user.id);
+      }
+    }
+  );
+};
+
+
+User.updateWithoutImage = (user, result) => {
+  const sql = `
+  UPDATE 
+  users 
+  SET name = ?, lastname =?, phone = ?, updated_at = ? WHERE id = ?`;
+  db.query(
+    sql,
+    [
+      user.name,
+      user.lastname,
+      user.phone,
+      new Date(),
+      user.id,
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("Error : ", err);
+      } else {
+        console.log("Usuario actualizado : ", res.insertId);
+        result(null, user.id);
       }
     }
   );

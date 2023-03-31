@@ -10,6 +10,7 @@ const multer = require("multer");
  * Importar datos
  */
 const usersRoutes = require("./routes/userRoutes");
+const categoriesRoutes = require("./routes/categoryRoutes");
 
 const port = process.env.PORT || 3000;
 
@@ -39,7 +40,7 @@ const upload = multer({
  */
 
 usersRoutes(app, upload);
-
+categoriesRoutes(app, upload);
 /*
  * Configuracion del Servidor
  */
