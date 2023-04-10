@@ -22,7 +22,7 @@ module.exports = (app, upload) => {
   app.put(
     "/api/categories/update",
     passport.authenticate("jwt", { session: false }),
-    categoriesController.update
+    categoriesController.update 
   );
   app.delete(
     "/api/categories/delete/:id",

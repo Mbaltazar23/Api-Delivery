@@ -11,7 +11,7 @@ const multer = require("multer");
  */
 const usersRoutes = require("./routes/userRoutes");
 const categoriesRoutes = require("./routes/categoryRoutes");
-
+const productsRoutes = require("./routes/productRoutes");
 const port = process.env.PORT || 3000;
 
 app.use(logger("dev"));
@@ -41,6 +41,7 @@ const upload = multer({
 
 usersRoutes(app, upload);
 categoriesRoutes(app, upload);
+productsRoutes(app, upload);
 /*
  * Configuracion del Servidor
  */
