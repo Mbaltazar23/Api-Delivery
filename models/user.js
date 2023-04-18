@@ -91,6 +91,38 @@ GROUP BY
   });
 };
 
+User.findDeliveryMen = (result) => {
+  const sql = `
+  SELECT
+  U.id,
+  U.email,
+  U.name,
+  U.lastname,
+  U.image,
+  U.phone
+FROM
+  users AS U
+INNER JOIN
+  user_has_roles AS UHR
+ON
+  UHR.id_user = U.id
+INNER JOIN
+  roles AS R
+ON
+  UHR.id_rol = R.id
+WHERE
+  R.id = 2`;
+
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.log("Error : ", err);
+    } else {
+      console.log("Usuarios Repartidores : ", data);
+      result(null, data);
+    }
+  });
+};
+
 User.create = async (user, result) => {
   const hash = await bcrypt.hash(user.password, 10);
   const sql = `
@@ -138,14 +170,7 @@ User.update = (user, result) => {
   SET name = ?, lastname =?, phone = ?, image = ?, updated_at = ? WHERE id = ?`;
   db.query(
     sql,
-    [
-      user.name,
-      user.lastname,
-      user.phone,
-      user.image,
-      new Date(),
-      user.id,
-    ],
+    [user.name, user.lastname, user.phone, user.image, new Date(), user.id],
     (err, res) => {
       if (err) {
         console.log("Error : ", err);
@@ -157,7 +182,6 @@ User.update = (user, result) => {
   );
 };
 
-
 User.updateWithoutImage = (user, result) => {
   const sql = `
   UPDATE 
@@ -165,13 +189,7 @@ User.updateWithoutImage = (user, result) => {
   SET name = ?, lastname =?, phone = ?, updated_at = ? WHERE id = ?`;
   db.query(
     sql,
-    [
-      user.name,
-      user.lastname,
-      user.phone,
-      new Date(),
-      user.id,
-    ],
+    [user.name, user.lastname, user.phone, new Date(), user.id],
     (err, res) => {
       if (err) {
         console.log("Error : ", err);

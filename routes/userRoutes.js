@@ -6,6 +6,12 @@ module.exports = (app, upload) => {
   // PUT -> Actualizar datos
   // DELETE -> Eliminar datos
 
+  app.get(
+    "/api/users/findDeliveryMen",
+    passport.authenticate("jwt", { session: false }),
+    userController.findDeliveryMen
+  );
+
   app.post("/api/users/create", userController.register);
   app.post(
     "/api/users/createWithImage",

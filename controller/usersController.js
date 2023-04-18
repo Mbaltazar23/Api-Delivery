@@ -6,6 +6,20 @@ const keys = require("../config/keys");
 const storage = require("../utils/cloud_storage");
 
 module.exports = {
+  findDeliveryMen(req, res) {
+    User.findDeliveryMen((err, data) => {
+      if (err) {
+        return res.status(501).json({
+          success: false,
+          message: "Hubo un error con la lista de usuarios repartidores",
+          error: err,
+        });
+      }
+
+      return res.status(201).json(data);
+    });
+  },
+
   login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
