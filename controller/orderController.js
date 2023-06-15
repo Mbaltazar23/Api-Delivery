@@ -47,6 +47,29 @@ module.exports = {
     });
   },
 
+  findByClientAndStatus(req, res) {
+    const id_client = req.params.id_client
+    const status = req.params.status;
+    Order.findByClientAndStatus(id_client ,status, (err, data) => {
+      if (err) {
+        return res.status(501).json({
+          success: false,
+          message: "Hubo un error al momento de listar las ordenes",
+          error: err,
+        });
+      }
+
+      for (const d of data) {
+        d.address = JSON.parse(d.address);
+        d.client = JSON.parse(d.client);
+        d.products = JSON.parse(d.products);
+        d.delivery = JSON.parse(d.delivery);
+      }
+
+      return res.status(201).json(data);
+    });
+  },
+
   async create(req, res) {
     const order = req.body;
 
@@ -109,6 +132,26 @@ module.exports = {
     const order = req.body;
 
     Order.updateToOnTheWay(order.id, order.id_delivery, (err, id_order) => {
+      if (err) {
+        return res.status(501).json({
+          success: false,
+          message: "Hubo un error en actualizar la orden",
+          error: err,
+        });
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "La orden se actualizo correctamente",
+        data: `${id_order}`, //El ID del nuevo usuario
+      });
+    });
+  },
+
+  updateToDelivered(req, res) {
+    const order = req.body;
+
+    Order.updateToDelivered(order.id, order.id_delivery, (err, id_order) => {
       if (err) {
         return res.status(501).json({
           success: false,
