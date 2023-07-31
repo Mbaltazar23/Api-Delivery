@@ -199,4 +199,29 @@ module.exports = {
       });
     });
   },
+
+  async updateNotificationToken(req, res) {
+    const id = req.body.id;
+
+    const token = req.body.token
+
+    console.log("ID", id);
+    console.log("Token", token);
+
+    User.updateNotificationToken(id, token, (err, data) => {
+      if (err) {
+        return res.status(501).json({
+          success: false,
+          message: "Hubo un error con la actualizacion del usuario",
+          error: err,
+        });
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "El token se actualizo correctamente",
+        data: id, //El ID del nuevo usuario
+      });
+    });
+  },
 };
